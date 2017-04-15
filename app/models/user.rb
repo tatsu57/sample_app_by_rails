@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
     uniqueness: {case_sensitive: false}
 
   # railsがセキュアなパスワードを生成するためのメソッド。詳細は以下のURL
+  # パスワードの存在検証と確認のバリデーションはhas_secure_passwordがやってくれている。
   # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/secure_password.rb
   has_secure_password
   validates :password, length: { minimum: 6 }
