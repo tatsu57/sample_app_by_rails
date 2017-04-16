@@ -7,6 +7,12 @@ gem 'bootstrap-sass', '2.3.2.0'
 gem 'sprockets', '2.11.0'
 # passwordの暗号化gem
 gem 'bcrypt-ruby', '3.1.2'
+# 実際の存在しそうなユーザーをテスト用に作成
+gem 'faker', '1.1.2'
+# ページネーションのgem
+gem 'will_paginate', '3.0.4'
+# bootstrap用のページネーション
+gem 'bootstrap-will_paginate', '0.0.9'
 
 group :development, :test do
   gem 'sqlite3', '1.3.8'

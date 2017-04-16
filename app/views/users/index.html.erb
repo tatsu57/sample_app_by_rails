@@ -1,0 +1,13 @@
+<% provide(:title, 'All users') %>
+<h1>All users</h1>
+
+<%= will_paginate %>
+
+<ul class="users">
+  <!-- particalの_user.html.erbにeachブロックは存在しないが、コチラから
+       @userと配列やハッシュを与えるとrailsが自動でeachの補完をしてくれる
+  -->
+  <%= render @users %>
+</ul>
+
+<%= will_paginate %>
