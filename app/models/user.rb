@@ -3,6 +3,17 @@ class User < ActiveRecord::Base
   # dependent: :destory はuserが削除されるとそれに紐づくmicropostsも削除される
   has_many :microposts, dependent: :destroy
 
+  has_many :relationships, foreign_key: "follower_id", dependent: :destroy
+
+  # 本来はfollowedsになってしまうが、意味が曖昧になってしまうため,sourceで名前を指定して
+  # followed_usersに変更している。
+  # throughはrelationshipsのfollowed_idを経由しているからthroughが必要
+  has_many :followed_users, through: :relationships, source: :followed
+
+  has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
+
+  has_many :followers, through: :reverse_relationships, source: :follower
+
   before_save { self.email = email.downcase}
 
   #呼び出されているクラス内のメソッドをシンボルで呼び出すことができる
@@ -38,7 +49,19 @@ class User < ActiveRecord::Base
   end
 
   def feed
-    Micropost.where("user_id = ?", id)
+    Micropost.from_users_followed_by(self)
+  end
+
+  def following?(other_user)
+    self.relationships.find_by(followed_id: other_user.id)
+  end
+
+  def follow!(other_user)
+    self.relationships.create!(followed_id: other_user.id)
+  end
+
+  def unfollow!(other_user)
+    self.relationships.find_by(followed_id: other_user.id).destroy
   end
 
   private

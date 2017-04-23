@@ -1,10 +1,15 @@
 SampleApp::Application.routes.draw do
 
   # resourcesを設定するとrailsが推奨するindexやshow/newなどのrouteを自動定義してくれる RestFul
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
 
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
 
   root 'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'
