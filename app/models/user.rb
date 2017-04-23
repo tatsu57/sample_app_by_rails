@@ -1,5 +1,8 @@
 class User < ActiveRecord::Base
 
+  # dependent: :destory はuserが削除されるとそれに紐づくmicropostsも削除される
+  has_many :microposts, dependent: :destroy
+
   before_save { self.email = email.downcase}
 
   #呼び出されているクラス内のメソッドをシンボルで呼び出すことができる
@@ -32,6 +35,10 @@ class User < ActiveRecord::Base
   def User.encrypt(token)
     # tokenがnilの場合のto_sをすることで""空文字に変換することで、エラーを回避(テストのため)
     Digest::SHA1.hexdigest(token.to_s)
+  end
+
+  def feed
+    Micropost.where("user_id = ?", id)
   end
 
   private

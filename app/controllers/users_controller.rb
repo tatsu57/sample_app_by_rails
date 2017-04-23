@@ -5,11 +5,13 @@ class UsersController < ApplicationController
   before_action :admin_user, only: :destroy
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.paginate(page: params[:page], :per_page => 10)
   end
 
   def show
     @user = User.find(params[:id])
+    # params[:page]はページネーションのページの引数。
+    @microposts = @user.microposts.paginate(page: params[:page], :per_page => 10)
   end
 
   def new
@@ -51,15 +53,6 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
-
-    def signed_in_user
-      # @note notice: でflashクラスのnoticeに値を追加できる。
-      # @note signin_urlはフルパスのsigninのurlを表示できる
-      unless signed_in?
-        store_location
-        redirect_to signin_url, notice: "Please sign in."
-      end
     end
 
     def corrent_user

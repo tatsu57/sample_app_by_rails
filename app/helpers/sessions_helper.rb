@@ -17,6 +17,15 @@ module SessionsHelper
     !current_user.nil?
   end
 
+  def signed_in_user
+    # @note notice: でflashクラスのnoticeに値を追加できる。
+    # @note signin_urlはフルパスのsigninのurlを表示できる
+    unless signed_in?
+      store_location
+      redirect_to signin_url, notice: "Please sign in."
+    end
+  end
+
   # @note メソッド名の最後に=を付けるとインスタンス変数にできる
   # 使い方: self.current_userをするとこのメソッドを呼ばれる
   # 自動で引数にuserが入る
@@ -55,5 +64,4 @@ module SessionsHelper
   def store_location
     session[:return_to] = request.url
   end
-
 end
